@@ -23,7 +23,7 @@
 
 unitize_core <- function(
   test.files, store.ids, state, pre, post, history, interactive.mode,
-  force.update, auto.accept, mode, use.diff
+  force.update, auto.accept, mode, use.diff, diff.fun
 ) {
   # - Validation / Setup -------------------------------------------------------
 
@@ -75,8 +75,18 @@ unitize_core <- function(
   if(!is.TF(interactive.mode))
     stop("Argument `interactive.mode` must be TRUE or FALSE")
   if(!is.TF(force.update)) stop("Argument `force.update` must be TRUE or FALSE")
-  if(!is.TF(use.diff))
-    stop("Argument `use.diff` must be TRUE or FALSE")
+  if(!is.null(use.diff)) {
+    message(
+      "Argument `use.diff` is deprecated in favor of `diff.fun`, and will ",
+      "eventually be removed."
+    )
+    if(!is.TF(use.diff)) stop("Argument `use.diff` must be TRUE or FALSE")
+  } else {
+    use.diff <-TRUE
+  }
+  if(is.null(diff.fun)) diff.fun <- all.equal
+  if(!isTRUE(fun.err <- is.two_arg_fun(diff.fun)))
+    stop("Argument `diff.fun` ", fun.err)
 
   # Validate state; note that due to legacy code we disassemble state into the
   # par.env and other components
@@ -452,7 +462,8 @@ unitize_core <- function(
         auto.accept=auto.accept,
         history=history,
         global=global,
-        use.diff=use.diff
+        use.diff=use.diff,
+        diff.fun=diff.fun
       ),
       unitizerInteractiveFail=function(e) interactive.fail <<- TRUE
     )
@@ -595,7 +606,7 @@ unitize_eval <- function(tests.parsed, unitizers, global) {
 
 unitize_browse <- function(
   unitizers, mode, interactive.mode, force.update, auto.accept, history, global,
-  use.diff
+  use.diff, diff.fun
 ) {
   # - Prep ---------------------------------------------------------------------
 
@@ -630,7 +641,8 @@ unitize_browse <- function(
     browsePrep, as.list(unitizers), mode=mode,
     start.at.browser=(identical(mode, "review") | !to.review) & !force.update,
     MoreArgs=list(
-      hist.con=hist.obj$con, interactive=interactive.mode, use.diff=use.diff
+      hist.con=hist.obj$con, interactive=interactive.mode, use.diff=use.diff,
+      diff.fun=diff.fun
     ),
     SIMPLIFY=FALSE
   )
@@ -839,7 +851,7 @@ unitize_browse <- function(
 
           browse.res <- browseUnitizer(
             unitizers[[i]], untz.browsers[[i]], force.update=force.update,
-            use.diff=use.diff
+            use.diff=use.diff, diff.fun=diff.fin
           )
           summaries@updated[[i]] <- browse.res@updated
           unitizers[[i]] <- browse.res@unitizer

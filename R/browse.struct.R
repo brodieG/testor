@@ -320,8 +320,8 @@ setClass("unitizerBrowse", contains="unitizerList",
     # whether to show browser first, also disables warnings about reviewing
     # tests that are not usually reviewed
     start.at.browser="logical",
-    use.diff="logical"          # Whether to use a diff in failure comparisons
-
+    use.diff="logical",         # Whether to use a diff in failure comparisons
+    diff.fun="function"         # What function to use as the diff
   ),
   prototype=list(
     mapping=new("unitizerBrowseMapping"),

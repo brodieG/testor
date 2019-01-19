@@ -25,4 +25,14 @@ NULL
       "without enabling.  See `?unitizerState` for details."
     )
   }
+  if(is.null(getOption('unitizer.diff.fun'))) {
+    packageStartupMessage(
+      "For an improved experience run:\n\n",
+      "if(!require(diffobj)) install.packages('diffobj')\n",
+      "options(unitizer.diff.fun=diffobj::diffobj)\n\n",
+      "or simply `options(unitizer.diff.fun=unitizer::diff)` to suppress "
+      "this message."
+    )
+  }
+
 }

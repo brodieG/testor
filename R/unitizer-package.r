@@ -7,7 +7,6 @@
 #'
 #' @import methods
 #' @import stats
-#' @import diffobj
 #' @importFrom utils capture.output file_test getParseData installed.packages
 #'   loadhistory modifyList object.size packageVersion remove.packages
 #'   savehistory

@@ -730,22 +730,24 @@ setMethod("reviewNext", c("unitizerBrowse"),
             if(x@use.diff) "`.DIFF$state` for details"
             else "`.NEW$state` and `.REF`$state"
           )
+          # So that functions that deparse inputs will show the correct
+          # object names
+          .REF <- list(state=item.ref@state)
+          .NEW <- list(state=item.new@state)
+          diff.res <- try(x@diff.fun(.REF$state, .NEW$state))
+          if(!is.object(diff.res) && is.character(diff.res)) {
+            diff.alt <- diff.res
+            use.diff <- FALSE
+          }
           diffs@state <- new(
             "unitizerItemTestsErrorsDiff", err=FALSE,
             txt="State mismatch:",
             txt.alt=txt.alt,
             show.diff=FALSE,
-            use.diff=x@use.diff,
-            diff=if(x@use.diff) diffPrint(
-              item.ref@state, item.new@state,
-              tar.banner=quote(.REF$state),
-              cur.banner=quote(.NEW$state)
-            ),
-            diff.alt=if(!x@use.diff)
-              as.character(all.equal(item.ref@state, item.new@state)) else
-              character()
-          )
-        }
+            use.diff=use.diff,
+            diff=diff.res,
+            diff.alt=diff.alt   # this will just be catted
+        ) }
         # must eval to make sure that correct methods are available when
         # outputing failures to screen
 

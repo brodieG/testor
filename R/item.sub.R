@@ -232,14 +232,11 @@ setMethod("as.Diffs", "unitizerItemTestsErrors",
         res <- if(identical(i, "value")) {
           as.name(x)
         } else call("$", as.name(toupper(x)), as.name(i))
-        call("quote", res)
       }
-      diff <- if(x@.use.diff) try(
-        diffObj(
-          curr.err@.ref, curr.err@.new, tar.banner=make_cont(".ref"),
-          cur.banner=make_cont(".new")
-        )
-      )
+      diff.call <- quote(x@diff.fun(NULL, NULL))
+      diff.call[[3L]][[2L]] <- make_cont(".ref")
+      diff.call[[3L]][[3L]] <- make_cont(".new")
+      diff <- try(eval(diff))
       diffs[[i]] <- if(inherits(diff, "try-error")) {
         new(
           "unitizerItemTestsErrorsDiff",
@@ -294,7 +291,7 @@ setMethod("show", "unitizerItemTestsErrorsDiff",
     cat_fun(if(object@show.diff) object@txt else object@txt.alt)
     if(object@show.diff) {
       if(object@use.diff) show(object@diff)
-      else cat(object@diff.alt, sep='\n')
+      else writeLines(object@diff.alt)
       cat("\n")
     }
     invisible(NULL)

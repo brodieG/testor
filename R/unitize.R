@@ -111,8 +111,11 @@
 #'   specify which type(s) of test you wish to auto accept (i.e. same as typing
 #'   \code{"Y"} at the \code{unitizer} prompt) or empty character vector to turn
 #'   off (default)
-#' @param use.diff TRUE or FALSE, whether to use diffs when there is an error,
+#' @param use.diff TRUE or FALSE, whether to use diffs when a test fails,
 #'   if FALSE uses \code{\link{all.equal}} instead.
+#' @param diff.fun function that accepts at least and requires no more than two
+#'   arguments.  If `use.diff` is TRUE, then this function will be used to
+#'   display diffs between new and reference output when a test fails.
 #' @return \code{unitize} and company are intended to be used primarily for
 #'   the interactive environment and side effects.  The functions do return
 #'   summary data about test outcomes and user input as
@@ -131,7 +134,8 @@ unitize <- function(
   interactive.mode=interactive(),
   force.update=FALSE,
   auto.accept=character(0L),
-  use.diff=getOption("unitizer.use.diff")
+  use.diff=getOption("unitizer.use.diff"),
+  diff.fun=getOption("unitizer.diff.fun")
 ) {
   # Initial spacer, must be done in each top level call
 
@@ -148,14 +152,18 @@ unitize <- function(
       test.file.inf, list(store.id.inf), state=state,
       pre=pre, post=post, history=history,
       interactive.mode=interactive.mode,  force.update=force.update,
-      auto.accept=auto.accept, mode="unitize", use.diff=use.diff
+      auto.accept=auto.accept, mode="unitize", use.diff=use.diff,
+      diff.fun=diff.fun
     )[[1L]]
   )
 }
 #' @rdname unitize
 #' @export
 
-review <- function(store.id=NULL) {
+review <- function(
+  store.id=NULL, use.diff=getOption("unitizer.use.diff"),
+  diff.fun=getOption("unitizer.diff.fun")
+) {
   if(!interactive_mode()) stop("`review` only available in interactive mode")
   # Initial spacer, must be done in each top level call
 
@@ -172,7 +180,8 @@ review <- function(store.id=NULL) {
       force.update=FALSE,
       auto.accept=character(0L),
       mode="review",
-      use.diff=TRUE
+      use.diff=TRUE,
+
     )[[1L]]
   )
 }
@@ -189,7 +198,8 @@ unitize_dir <- function(
   interactive.mode=interactive(),
   force.update=FALSE,
   auto.accept=character(0L),
-  use.diff=getOption("unitizer.use.diff")
+  use.diff=getOption("unitizer.use.diff"),
+  diff.fun=getOption("unitizer.diff.fun")
 ) {
   # Validations
   if(
