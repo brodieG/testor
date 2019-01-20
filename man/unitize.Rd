@@ -4,23 +4,27 @@
 \alias{unitize}
 \alias{review}
 \alias{unitize_dir}
-\alias{review}
-\alias{unitize_dir}
 \title{Unitize an R Test Script}
 \usage{
 unitize(test.file = NULL, store.id = NULL,
   state = getOption("unitizer.state"), pre = NULL, post = NULL,
   history = getOption("unitizer.history.file"),
   interactive.mode = interactive(), force.update = FALSE,
-  auto.accept = character(0L), use.diff = getOption("unitizer.use.diff"))
+  auto.accept = character(0L),
+  use.diff = getOption("unitizer.use.diff"),
+  diff.fun = getOption("unitizer.diff.fun"))
 
-review(store.id = NULL)
+review(store.id = NULL, use.diff = getOption("unitizer.use.diff"),
+  diff.fun = getOption("unitizer.diff.fun"))
 
 unitize_dir(test.dir = NULL, store.ids = filename_to_storeid,
   pattern = "^[^.].*\\\\.[Rr]$", state = getOption("unitizer.state"),
-  pre = NULL, post = NULL, history = getOption("unitizer.history.file"),
+  pre = NULL, post = NULL,
+  history = getOption("unitizer.history.file"),
   interactive.mode = interactive(), force.update = FALSE,
-  auto.accept = character(0L), use.diff = getOption("unitizer.use.diff"))
+  auto.accept = character(0L),
+  use.diff = getOption("unitizer.use.diff"),
+  diff.fun = getOption("unitizer.diff.fun"))
 }
 \arguments{
 \item{test.file}{path to the file containing tests, if supplied path does not
@@ -94,8 +98,12 @@ specify which type(s) of test you wish to auto accept (i.e. same as typing
 \code{"Y"} at the \code{unitizer} prompt) or empty character vector to turn
 off (default)}
 
-\item{use.diff}{TRUE or FALSE, whether to use diffs when there is an error,
+\item{use.diff}{TRUE or FALSE, whether to use diffs when a test fails,
 if FALSE uses \code{\link{all.equal}} instead.}
+
+\item{diff.fun}{function that accepts at least and requires no more than two
+arguments.  If `use.diff` is TRUE, then this function will be used to
+display diffs between new and reference output when a test fails.}
 
 \item{test.dir}{the directory to run the tests on; if NULL will use the
 \dQuote{tests/unitizer} package folder if it exists, or \dQuote{.} if it

@@ -728,17 +728,17 @@ setMethod("reviewNext", c("unitizerBrowse"),
           txt.alt <- sprintf(
             "State mismatch; see %s.",
             if(x@use.diff) "`.DIFF$state` for details"
-            else "`.NEW$state` and `.REF`$state"
+            else "`.NEW$state` and `.REF$state`"
           )
           # So that functions that deparse inputs will show the correct
           # object names
+
           .REF <- list(state=item.ref@state)
           .NEW <- list(state=item.new@state)
           diff.res <- try(x@diff.fun(.REF$state, .NEW$state))
-          if(!is.object(diff.res) && is.character(diff.res)) {
-            diff.alt <- diff.res
-            use.diff <- FALSE
-          }
+          use.diff <- !(!is.object(diff.res) && is.character(diff.res))
+          diff.alt <- if(!use.diff) diff.res else character()
+
           diffs@state <- new(
             "unitizerItemTestsErrorsDiff", err=FALSE,
             txt="State mismatch:",

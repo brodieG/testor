@@ -84,9 +84,10 @@ setClass("unitizerItemTestsErrors",
     message="unitizerItemTestError",
     aborted="unitizerItemTestError",
     .fail.context="numericOrNULL", # for passing around options for
-    .use.diff="logical"
+    .use.diff="logical",
+    .diff.fun="function"
   ),
-  prototype(.use.diff=TRUE)
+  prototype(.use.diff=TRUE, .diff.fun=all.equal)
 )
 unitizerItemTestsErrorsSlots <-
   grep("^[^.]", slotNames("unitizerItemTestsErrors"), value=TRUE)
@@ -118,7 +119,7 @@ setMethod("initialize", "unitizerItemTestsErrors",
 
 setClass("unitizerItemTestsErrorsDiff",
   slots=c(
-    diff="DiffOrNULL",
+    diff="ANY",
     diff.alt="character",
     txt="character",
     txt.alt="character",
@@ -228,15 +229,7 @@ setMethod("as.Diffs", "unitizerItemTestsErrors",
       } else {
         c(mismatch, as.character(UL(decap_first(curr.err@value)), width=width))
       }
-      make_cont <- function(x) {
-        res <- if(identical(i, "value")) {
-          as.name(x)
-        } else call("$", as.name(toupper(x)), as.name(i))
-      }
-      diff.call <- quote(x@diff.fun(NULL, NULL))
-      diff.call[[3L]][[2L]] <- make_cont(".ref")
-      diff.call[[3L]][[3L]] <- make_cont(".new")
-      diff <- try(eval(diff))
+      diff <- eval_diff(i, x@.diff.fun, curr.err)
       diffs[[i]] <- if(inherits(diff, "try-error")) {
         new(
           "unitizerItemTestsErrorsDiff",
@@ -337,16 +330,7 @@ setMethod("show", "unitizerItemTestsErrors",
         ) )
       }
       out.fun(out)
-      make_cont <- function(x) {
-        res <- if(identical(i, "value")) {
-          as.name(x)
-        } else call("$", as.name(toupper(x)), as.name(i))
-        call("quote", res)
-      }
-      diff <- if(object@.use.diff) diffObj(
-        curr.err@.ref, curr.err@.new, tar.banner=make_cont(".ref"),
-        cur.banner=make_cont(".new")
-      )
+      diff <- if(object@.use.diff) eval_diff(i, object@.diff.fun, curr.err)
       diffs[[i]] <- new(
         "unitizerItemTestsErrorsDiff", diff=diff, txt=out, txt.alt=out,
         err=curr.err@compare.err

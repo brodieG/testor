@@ -18,13 +18,14 @@ setGeneric("browsePrep", function(x, mode, ...) standardGeneric("browsePrep"))
 setMethod("browsePrep", c("unitizer", "character"), valueClass="unitizerBrowse",
   function(
     x, mode, hist.con=NULL, interactive=FALSE, start.at.browser=FALSE,
-    use.diff=TRUE, ...
+    use.diff=TRUE, diff.fun=all.equal, ...
   ) {
     if(length(mode) != 1L || !mode %in% c("review", "unitize"))
       stop("Argument `mode` must be one of \"review\" or \"unitize\"")
     unitizer.browse <- new(
       "unitizerBrowse", mode=mode, hist.con=hist.con, interactive=interactive,
-      global=x@global, start.at.browser=start.at.browser, use.diff=use.diff
+      global=x@global, start.at.browser=start.at.browser, use.diff=use.diff,
+      diff.fun=diff.fun
     )
     # Assign the `show.diff` status to the errors, this isn't done when the
     # tests are evaluated.

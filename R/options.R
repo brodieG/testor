@@ -313,11 +313,14 @@ validate_options <- function(opts.to.validate, test.files=NULL) {
     is.list(opts.to.validate),
     all(grep("^unitizer\\.", names(opts.to.validate)))
   )
-  # Check all option existence except those that can be NULL; note that we
+  # Check all option existence except those that can be NULL;
 
   names.def <- setdiff(
     names(.unitizer.opts.default),
-    c("unitizer.par.env", "unitizer.color", "unitizer.history.file")
+    c(
+      "unitizer.par.env", "unitizer.color", "unitizer.history.file",
+      "unitizer.use.diff", "unitizer.diff.fun"
+    )
   )
   if(any(missing.opts <- !names.def %in% names(opts.to.validate)))
     stop(
@@ -331,8 +334,6 @@ validate_options <- function(opts.to.validate, test.files=NULL) {
     {
       if(!is.TF(unitizer.show.output))
         stop("Option `unitizer.show.output` must be TRUE or FALSE")
-      if(!is.TF(unitizer.use.diff))
-        stop("Option `unitizer.use.diff` must be TRUE or FALSE")
       if(
         exists("unitizer.color", inherits=FALSE) &&
         !is.TF(unitizer.color) && !is.null(unitizer.color)

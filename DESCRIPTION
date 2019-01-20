@@ -26,6 +26,7 @@ Suggests:
     testthat,
     devtools
 License: GPL (>= 2)
+Encoding: UTF-8
 LazyData: true
 URL: https://github.com/brodieG/unitizer
 BugReports: https://github.com/brodieG/unitizer/issues
@@ -74,4 +75,4 @@ Collate:
     'unitizer-package.r'
     'unitizer.add.R'
     'upgrade.R'
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0.9000
