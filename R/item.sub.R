@@ -84,10 +84,9 @@ setClass("unitizerItemTestsErrors",
     message="unitizerItemTestError",
     aborted="unitizerItemTestError",
     .fail.context="numericOrNULL", # for passing around options for
-    .use.diff="logical",
-    .diff.fun="function"
+    .use.diff="logical"
   ),
-  prototype(.use.diff=TRUE, .diff.fun=all.equal)
+  prototype(.use.diff=TRUE)
 )
 unitizerItemTestsErrorsSlots <-
   grep("^[^.]", slotNames("unitizerItemTestsErrors"), value=TRUE)
@@ -209,7 +208,7 @@ setClassUnion(
 
 setGeneric("as.Diffs", function(x, ...) StandardGeneric("as.Diff")) # nocov
 setMethod("as.Diffs", "unitizerItemTestsErrors",
-  function(x, width=getOption("width"), ...) {
+  function(x, width=getOption("width"), diff.fun, ...) {
     slots <- grep("^[^.]", slotNames(x), value=TRUE)
     slot.errs <- vapply(
       slots, function(y) !is.null(slot(x, y)@value), logical(1L)
@@ -229,7 +228,7 @@ setMethod("as.Diffs", "unitizerItemTestsErrors",
       } else {
         c(mismatch, as.character(UL(decap_first(curr.err@value)), width=width))
       }
-      diff <- eval_diff(i, x@.diff.fun, curr.err)
+      diff <- eval_diff(i, diff.fun, curr.err)
       diffs[[i]] <- if(inherits(diff, "try-error")) {
         new(
           "unitizerItemTestsErrorsDiff",

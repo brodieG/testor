@@ -140,7 +140,7 @@ eval_user_exp <- function(unitizerUSEREXP, env, global, with.display=TRUE) {
   }
   # convolution required due to possible NULL value so can't assign directly to
   # elements; also, note that the `state` return value is not used in most
-  # `eval_user_exp` uses; the
+  # `eval_user_exp` uses
 
   c(
     list(
