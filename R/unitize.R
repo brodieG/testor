@@ -111,16 +111,19 @@
 #'   specify which type(s) of test you wish to auto accept (i.e. same as typing
 #'   \code{"Y"} at the \code{unitizer} prompt) or empty character vector to turn
 #'   off (default)
-#' @param use.diff TRUE or FALSE, whether to use diffs when a test fails,
-#'   if FALSE uses \code{\link{all.equal}} instead.
+#' @param use.diff (DEPRECATED) TRUE or FALSE, whether to use diffs when a test
+#'   fails, if FALSE uses \code{\link{all.equal}} instead.
 #' @param diff.fun function that accepts at least and requires no more than two
-#'   arguments.  If `use.diff` is TRUE, then this function will be used to
+#'   arguments.  If `use.diff` is FALSE, then `all.equal` will be used,
+#'   otherwise this function will be used.  The recommendation is to use
+#'   \code{diffobj::diffPrint} or \code{diffobj::diffObj}
+#'   this function will be used to
 #'   display diffs between new and reference output when a test fails.
 #' @return \code{unitize} and company are intended to be used primarily for
 #'   the interactive environment and side effects.  The functions do return
 #'   summary data about test outcomes and user input as
 #'   \code{unitizer_result} objects, or for \code{unitize_dir} as
-#'   \code{unitizer_results} objects, invisbly.  See
+#'   \code{unitizer_results} objects, invisibly.  See
 #'   \code{\link{unitizer_result}}.
 #' @seealso \code{\link{unitizerState}}, \code{\link{unitizer.opts}},
 #'   \code{\link{get_unitizer}}, \code{\link{infer_unitizer_location}},
@@ -181,7 +184,7 @@ review <- function(
       auto.accept=character(0L),
       mode="review",
       use.diff=TRUE,
-
+      diff.fun=diff.fun
     )[[1L]]
   )
 }
@@ -248,6 +251,7 @@ unitize_dir <- function(
       state=state,
       pre=pre, post=post, history=history,
       interactive.mode=interactive.mode, force.update=force.update,
-      auto.accept=auto.accept, mode="unitize", use.diff=use.diff
+      auto.accept=auto.accept, mode="unitize", use.diff=use.diff,
+      diff.fun=diff.fun
   ) )
 }

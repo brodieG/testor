@@ -33,7 +33,7 @@ NULL
       "For an improved experience run:\n\n",
       "\tif(!require(diffobj)) install.packages('diffobj')\n",
       "\toptions(unitizer.diff.fun=diffobj::diffPrint)\n\n",
-      "or simply `options(unitizer.diff.fun=unitizer::diff)` to suppress ",
+      "or simply `options(unitizer.diff.fun=all.equal)` to suppress ",
       "this message.",
       "\n~~~~"
     )
