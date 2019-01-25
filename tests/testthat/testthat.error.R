@@ -6,7 +6,7 @@ local({
       'unitizerItemTestsErrorsDiffs',
       value=new(
         'unitizerItemTestsErrorsDiff', txt='value', err=TRUE,
-        diff=diffobj::diffChr(1, 2)
+        diff="diff error"
     ) )
     expect_equal(diffs$value@diff@target, 1)
     expect_equal(diffs$value@diff@current, 2)
@@ -19,8 +19,9 @@ local({
       "unitizerItemTestError", compare.err=TRUE, value=c('compare', 'error')
     )
   )
-  err.capt <- unitizer:::capture_output(show(err))
-
+  err.capt <- unitizer:::capture_output(
+    show(unitizer:::as.Diffs(err, diff.fun=all.equal))
+  )
   test_that("Show Test Error", {
     # Create an error that triggers non-standard error diff display (comparison
     # error with more than one line of output)

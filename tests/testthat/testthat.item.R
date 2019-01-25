@@ -410,7 +410,11 @@ local({
       #   "^@@ \\.ref @@;-  \\[1\\] [0-9.]+;@@ \\.new @@", "+  \\[1\\] [0-9.]$"
       # )
       expect_match(
-        capture.output(show(my.unitizer7@tests.errorDetails[[5L]])),
+        capture.output(
+          show(
+            unitizer:::as.Diffs(
+              my.unitizer7@tests.errorDetails[[5L]], diff.fun=all.equal
+        ) ) ),
         "Value mismatch:", all=FALSE
       )
     })

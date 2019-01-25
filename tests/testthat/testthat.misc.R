@@ -379,7 +379,7 @@ test_that("diff conditionList", {
       simpleWarning("hello", call=quote(fun())),
       simpleWarning("goodbye", call=quote(fun()))
   ) )
-  expect_is(diffobj::diffObj(cond1, cond1), "Diff")
+  # expect_is(diffobj::diffObj(cond1, cond1), "Diff")
 })
 
 test_that("Condition object structure", {

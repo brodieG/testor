@@ -297,6 +297,9 @@ setMethod("show", "unitizerItemTestsErrorsDiff",
 ## This is somewhat convoluted.  Better would be to compute the object that has
 ## all this info, and then use the show method both when we first.
 ##
+## Update: we're trying to see if we can just deprecate this completely in favor
+## of show(as.Diffs(unitizerItemTestsErrors)) to simplify interface.  It _seems_
+## this functionality is not used other than in tests.
 #' @rdname unitizer_s4method_doc
 
 setMethod("show", "unitizerItemTestsErrors",
@@ -329,6 +332,7 @@ setMethod("show", "unitizerItemTestsErrors",
         ) )
       }
       out.fun(out)
+      browser()
       diff <- if(object@.use.diff) eval_diff(i, object@.diff.fun, curr.err)
       diffs[[i]] <- new(
         "unitizerItemTestsErrorsDiff", diff=diff, txt=out, txt.alt=out,

@@ -54,6 +54,7 @@ local({
     )
   })
   # Bad seed
+  context("Bad Seed")
 
   local(
     {
@@ -81,6 +82,7 @@ local({
   })
   # Unitizers in different directories that don't exist; also test using a
   # function to generate those directories
+  context("Bad dirs")
 
   get_store_id <- function(x) {
     file <- basename(x)
@@ -127,6 +129,7 @@ local({
 
   # Now test `unitize_dir`; we are testing all different combination of whether
   # a unitizer is accepted and updated
+  context("test dir")
 
   unitizer:::read_line_set_vals(
     c(
@@ -192,6 +195,8 @@ local({
   # cat(capture.output(print(x)), sep="\n", file=(f1 <- tempfile())); cat(capture.output(print(y)), sep="\n", file=(f2 <- tempfile())); tools::Rdiff(f1, f2);
   # unlink(paste0("f", 1:2))
 
+  context("print dir")
+
   test_that("print untizer result", {
     expect_equal_to_reference(
       untz3a.all.pr, file.path("helper", "refobjs", "unitize_resprint1.rds")
@@ -235,6 +240,9 @@ local({
   # the R session `covr` launches now seems to load the covr namespace.  The
   # logic here ensures covr namespace is always loaded for this tests, if
   # possible
+
+  context("more...")
+  browser()
 
   unload.covr <- FALSE
   if(!"covr" %in% loadedNamespaces()) {
@@ -306,6 +314,7 @@ local({
     )
   })
   # Update `fastlm` to cause unitizers to fail, and go through the errors
+  context("fastlm update...")
 
   update_fastlm(.unitizer.fastlm, version="0.1.1")
   devtools::install(.unitizer.fastlm, quick=TRUE, quiet=TRUE, local=FALSE)
@@ -379,6 +388,7 @@ local({
   txt12b <- unitizer:::capture_output(unitize_dir(test.dir, interactive.mode=TRUE))
 
   # Variations on YY, YYY, and YYY
+  context("multi-accept...")
 
   unitizer:::read_line_set_vals(c("1", "YY", "Y", "Q", "Q"))
   txt13 <- unitizer:::capture_output(unitize_dir(test.dir, interactive.mode=TRUE))
@@ -438,6 +448,8 @@ local({
     )
   })
   # Upgrade again, and try with deleted tests and other things
+
+  context("last upgrade...")
 
   update_fastlm(.unitizer.fastlm, version="0.1.2")
   devtools::install(.unitizer.fastlm, quick=TRUE, quiet=TRUE, local=FALSE)
